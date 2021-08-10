@@ -6,11 +6,11 @@ def set_color(image_path, r_val, g_val, b_val, alpha_val, invert_flag):
      cur_image = Image.open(str(image_path))
      image_tensor = np.asarray(cur_image)
      # set red values
-     r_new = image_tensor[:, :, 0] * (1 * (r_val + 0.00001))
+     r_new = image_tensor[:, :, 0] + r_val
      # set green values
-     g_new = image_tensor[:, :, 1] * (1 * (g_val + 0.00001))
+     g_new = image_tensor[:, :, 1] + g_val
      # set blue values
-     b_new = image_tensor[:, :, 2] * (1 * (b_val + 0.00001))
+     b_new = image_tensor[:, :, 2] + b_val
      # get the alpha values
      #alpha_new = image_tensor[:, :, 3] * alpha_val
 
@@ -36,3 +36,5 @@ def set_alpha(image_tensor, alpha):
     # set red values
      image_tensor[:, :, 0] *= alpha
      return image_tensor
+
+
