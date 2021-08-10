@@ -2,6 +2,8 @@ import PySimpleGUI as sg
 import ImageJam
 import base64
 import numpy as np
+import tkinter as tk
+
 # some useful variables
 img_w = 500
 img_h = 500
@@ -22,7 +24,7 @@ gui_layout = [[sg.Text('ImageJam by spacewaves', font=220, text_color="Silver")]
               [sg.Text('Alpha'), sg.Slider([-255, 255], orientation="horizontal", default_value=0, key='alphaSlider')],
               [sg.Button('Invert', key='INVERT')],
               [sg.Image("", size=(img_w, img_h), key="MAIN_IMG", pad=(20, 20))],  # set the key in order to access the window element during the runtime loop
-              [sg.Button('Advanced', key='ADVANCED'), sg.SaveAs(key='SAVE_PATH')],
+              [sg.Button('Advanced', key='ADVANCED'), sg.Button("Save as", key='SAVE')],
               [sg.Text(key="SAVEDIR")],
               [sg.Text('copyright heady studios 2020', font=220, text_color="Silver")]]
 
@@ -52,11 +54,23 @@ while True:
         image_subupdate(cur_filepath, r_val, g_val, b_val, alpha, invert_flag)
     if event == 'UPLOAD_IMG' and cur_filepath != ' ':
         window.Element('MAIN_IMG').update(cur_filepath, size=(img_w, img_h))  # display current image with resize formatiting
+        # return to default 
+        window.Element("rSlider").update(value="0")
+        window.Element("gSlider").update(value="0")
+        window.Element("bSlider").update(value="0")
+        window.Element("alphaSlider").update(value="0")
+        # overwrite previous color channel vals
+        r_prev = 0
+        g_prev = 0
+        b_prev = 0
+
     # slider colorizer listener awaiting changes to slider values
     # save image event
-    if event == "SAVE_PATH":
-        image_update.save(values["SAVE_PATH"], format="png")  # save the image to the given  filepath
-        window[SAVEDIR].update(value = values["SAVE_PATH"])
+    if event == "SAVE":
+        file_path = str(tk.filedialog.asksaveasfilename()) + ".png"
+        cur_image = ImageJam.set_color(cur_filepath, r_val, g_val, b_val, alpha, invert_flag)
+        cur_image.save(file_path, format="png")  # save the image to the given  filepath
+        window.Element("SAVEDIR").update(value = file_path)
     if event == sg.WIN_CLOSED or event == 'Cancel':  # if user closes window or clicks cancel
         break
 # on exit
