@@ -43,5 +43,38 @@ def set_alpha(image_tensor, alpha):
      image_tensor[:, :, 0] *= alpha
      return image_tensor
 
+<<<<<<< Updated upstream
 # test out the function
 # print(len(sum(set_color(test_img_array, 10, 10, 10)[:, :, 2])))
+=======
+def image_subupdate(cur_filepath, r_val, g_val, b_val, alpha, img_w, img_h, invert_flag, window):
+     # pass the current slider values to the colorizer
+    image_update = set_color(cur_filepath, r_val, g_val, b_val, alpha, invert_flag)
+    image_update.resize(size=(img_w, img_h))
+    image_update.save('cur_img', format="png")
+    # update the gui image
+    window.Element('MAIN_IMG').update('cur_img', size=(img_w, img_h))
+
+def save_img(cur_filepath, r_val, g_val, b_val, alpha, invert_flag, window):
+    file_path = str(tk.filedialog.asksaveasfilename()) + ".png"
+    cur_image = set_color(cur_filepath, r_val, g_val, b_val, alpha, invert_flag)
+    cur_image.save(file_path, format="png")  # save the image to the given  filepath
+    window.Element("SAVEDIR").update(Text = file_path)
+
+def upload_img(cur_filepath, r_val, g_val, b_val, alpha, img_w, img_h, invert_flag, window):
+    image_subupdate(cur_filepath, r_val, g_val, b_val, alpha, img_w, img_h, invert_flag, window)
+    # display current image with resize formatiting
+    # overide to default 
+    window.Element("rSlider").update(value="0")
+    window.Element("gSlider").update(value="0")
+    window.Element("bSlider").update(value="0")
+    window.Element("alphaSlider").update(value="0")
+    # overwrite previous color channel vals
+    r_prev = 0
+    g_prev = 0
+    b_prev = 0
+
+def invert_img(cur_filepath, r_val, g_val, b_val, alpha, img_w, img_h, invert_flag):
+     image_subupdate(cur_filepath, r_val, g_val, b_val, alpha, invert_flag, window)
+
+>>>>>>> Stashed changes
