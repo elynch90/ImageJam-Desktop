@@ -17,23 +17,21 @@ print(test_img_array.shape)
 ORIGINAL_IMG = None
 
 # colorize the image
-def set_color(image_path, r_val, g_val, b_val, alpha, invert_flag):
+def set_color(r_val, g_val, b_val, alpha, invert_flag):
     """Set the color of the image"""
-    cur_image = Image.open(str(image_path))
-    image_tensor = np.asarray(cur_image)
     # set red values
-    r_new = image_tensor[:, :, 0] * r_val
+    r_new = ORIGINAL_IMG[:, :, 0] * r_val
     # set green values
-    g_new = image_tensor[:, :, 1] * g_val
+    g_new = ORIGINAL_IMG[:, :, 1] * g_val
     # set blue values
-    b_new = image_tensor[:, :, 2] * b_val
+    b_new = ORIGINAL_IMG[:, :, 2] * b_val
 
     # clamp the values to 0-255
     r_new = np.clip(r_new, 0, 255)
     g_new = np.clip(g_new, 0, 255)
     b_new = np.clip(b_new, 0, 255)
     # create an updated image tensor based on 100 new color arrays
-    update_array = np.zeros((image_tensor.shape), dtype=np.uint8)
+    update_array = np.zeros((ORIGINAL_IMG.shape), dtype=np.uint8)
     update_array[:, :, 0] = r_new  # set red channel
     update_array[:, :, 1] = g_new  # set green channel
     update_array[:, :, 2] = b_new  # set blue channel
@@ -57,11 +55,11 @@ def set_alpha(image_tensor, alpha):
     return image_tensor
 
 
-def image_subupdate(cur_filepath, r_val, g_val, b_val,
+def image_subupdate(r_val, g_val, b_val,
                     alpha, img_w, img_h, invert_flag, window):
     """Update the image"""
     # pass the current slider values to the colorizer
-    image_update = set_color(cur_filepath, r_val, g_val,
+    image_update = set_color(r_val, g_val,
                              b_val, alpha, invert_flag)
     image_update.resize(size=(img_w, img_h))
     image_update.save('cur_img', format="png")
@@ -69,10 +67,10 @@ def image_subupdate(cur_filepath, r_val, g_val, b_val,
     window.Element('MAIN_IMG').update('cur_img', size=(img_w, img_h))
 
 
-def save_img(cur_filepath, r_val, g_val, b_val, alpha, invert_flag, window):
+def save_img(r_val, g_val, b_val, alpha, invert_flag, window):
     """Save the image to the given filepath"""
     file_path = str(tk.filedialog.asksaveasfilename()) + ".png"
-    cur_image = set_color(cur_filepath, r_val, g_val,
+    cur_image = set_color(r_val, g_val,
                           b_val, alpha, invert_flag)
     # save the image to the given filepath
     cur_image.save(file_path, format="png")
@@ -80,10 +78,17 @@ def save_img(cur_filepath, r_val, g_val, b_val, alpha, invert_flag, window):
     window.Element("SAVEDIR").update(file_path)
 
 
-def upload_img(cur_filepath, r_val, g_val, b_val, alpha,
+def upload_img(image_path, r_val, g_val, b_val, alpha,
                img_w, img_h, invert_flag, window):
-    if cur_filepath != "":
-        image_subupdate(cur_filepath, r_val, g_val, b_val, alpha,
+    if image_path != "":
+        # need to rewrite this to avoid loading the image every time
+        # we can just use the global variable
+        cur_image = Image.open(str(image_path))
+        image_tensor = np.asarray(cur_image)
+        # set the global variable
+        global ORIGINAL_IMG  # pylint: disable=global-statement
+        ORIGINAL_IMG = image_tensor
+        image_subupdate(r_val, g_val, b_val, alpha,
                         img_w, img_h, invert_flag, window)
         # display current image with resize formatiting
         # overide to default
@@ -95,13 +100,16 @@ def upload_img(cur_filepath, r_val, g_val, b_val, alpha,
         r_prev = 0
         g_prev = 0
         b_prev = 0
+        ORIGINAL_IMG 
     else:
         print("No image selected")
 
 
 def invert_img(cur_filepath, r_val, g_val, b_val, alpha,
                img_w, img_h, invert_flag, window):
-    image_subupdate(cur_filepath, r_val, g_val, b_val,
+    """Invert the image"""
+
+    image_subupdate(r_val, g_val, b_val,
                     alpha, invert_flag, window)
 
 def symetric_mirror(img_array):
