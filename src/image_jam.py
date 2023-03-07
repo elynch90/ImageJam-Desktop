@@ -3,7 +3,7 @@ from os import path, getcwd
 import numpy as np
 from PIL import Image
 import tkinter as tk
-
+import tempfile
 # test = open('test_img.png')
 # open the test image using PIL
 # get filepath
@@ -17,9 +17,12 @@ print(test_img_array.shape)
 ORIGINAL_IMG = None
 INVERTED = False
 
+# create a temporary dir for saving images
+TEMP_DIR = tempfile.TemporaryDirectory()
+TMP_FILE = path.join(TEMP_DIR.name, 'tmp.png')
+
+
 # colorize the image
-
-
 def set_color(r_val, g_val, b_val, alpha, invert_flag):
     """Set the color of the image"""
     # set red values
@@ -82,9 +85,9 @@ def image_subupdate(
         # load the image from the global variable
         image_update = Image.fromarray(ORIGINAL_IMG, "RGB")
     image_update.resize(size=(img_w, img_h))
-    image_update.save('cur_img', format="png")
+    image_update.save(TMP_FILE, format="png")
     # update the gui image
-    window.Element('MAIN_IMG').update('cur_img', size=(img_w, img_h))
+    window.Element('MAIN_IMG').update(TMP_FILE, size=(img_w, img_h))
 
 
 def save_img(r_val, g_val, b_val, alpha, invert_flag, window):
