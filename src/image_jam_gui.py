@@ -54,6 +54,7 @@ class ImageJamGUI:
         self.window = sg.Window("ImageJam", self.gui_layout, margins=(100, 50))
 
     def run(self) -> None:
+        """Run the GUI event loop"""
         # init
         r_prev = 0  # PREVIOUS VALUES TO CHECK FOR PARAMETER CHANGE
         g_prev = 0
