@@ -70,14 +70,14 @@ class ImageJamGUI:
                 b_val = values['bSlider']
                 if r_val != r_prev or g_val != g_prev or b_val != b_prev:
                     image_subupdate(
-                        cur_filepath, r_val, g_val, b_val, self.alpha,
+                        r_val, g_val, b_val, self.alpha,
                         self.img_w, self.img_h, self.invert_flag, self.window
                     )
                 r_prev, g_prev, b_prev = r_val, g_val, b_val
             if event == 'INVERT':
                 invert_img(
                     cur_filepath, r_val, g_val, b_val,
-                    self.alpha, self.img_w, self.img_h, self.invert_flag
+                    self.alpha, self.img_w, self.img_h, True, self.window
                 )
             if event == 'UPLOAD_IMG' and cur_filepath not in ['', ' ']:
                 upload_img(
