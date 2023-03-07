@@ -41,6 +41,7 @@ def set_color(r_val, g_val, b_val, alpha, invert_flag):
 
     # create an updated image tensor based on 100 new color arrays
     update_array = np.zeros((ORIGINAL_IMG.shape), dtype=np.uint8)
+    # red, green, blue, alpha = 0, 1, 2, 3
     update_array[:, :, 0] = r_clamped      # set red channel
     update_array[:, :, 1] = g_clamped      # set green channel
     update_array[:, :, 2] = b_clamped      # set blue channel
