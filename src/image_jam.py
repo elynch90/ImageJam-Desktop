@@ -1,10 +1,14 @@
 # script for edditing the images
+from os import path, getcwd
 import numpy as np
 from PIL import Image
+import tkinter as tk
 
 # test = open('test_img.png')
 # open the test image using PIL
-test_img = Image.open('test_img.png')
+# get filepath
+fp = path.join(getcwd(), 'src/test_img.png')
+test_img = Image.open(fp)
 # convert the test image into an array using np
 test_img_array = np.asarray(test_img)
 print(test_img_array.shape)
@@ -12,11 +16,9 @@ print(test_img_array.shape)
 # colorize the image
 
 
-def set_color(image_path, r_val, g_val, b_val):
+def set_color(image_path, r_val, g_val, b_val, alpha, invert_flag):
     cur_image = Image.open(str(image_path))
     image_tensor = np.asarray(cur_image)
-    # get the alpha values
-    alpha = image_tensor[:, :, 3]
     # set red values
     r_new = image_tensor[:, :, 0] * int(r_val / 100)
     # set green values
@@ -30,6 +32,9 @@ def set_color(image_path, r_val, g_val, b_val):
     update_array[:, :, 2] = b_new  # set blue channel
     update_array[:, :, 3] = alpha  # set alpha channel
 
+    # invert the image
+    if invert_flag:
+        update_array = 255 - update_array
     # print(update_array.shape)  # check the dimension of the image
     # converting the image from array using uint8 data type for pixel values
     image_update = Image.fromarray(update_array, "RGB")
@@ -85,10 +90,55 @@ def invert_img(cur_filepath, r_val, g_val, b_val, alpha,
     image_subupdate(cur_filepath, r_val, g_val, b_val,
                     alpha, invert_flag, window)
 
+def symetric_mirror(img_array):
+    """Create a symetric mirror image of an image array"""
+    # get the image dimensions
+    img_h, img_w, _ = img_array.shape
+    # get half the image relative to the width
+    half_img = img_array[:, :int(img_w / 2), :]
+    # transpose the image
+    half_img = np.transpose(half_img, (1, 0, 2))
+    # create a mirror image along the y-axis
+    half_img_b = np.flip(half_img, axis=1)
+    # combine the two images
+    sym_mirror_img_a = np.concatenate((half_img, half_img_b), axis=1)
+    # mirror the image along the x-axis
+    sym_mirror_img_b = np.flip(sym_mirror_img_a, axis=0)
+    # half the size of each image
+    sym_mirror_img_a = sym_mirror_img_a[:int(img_w / 2), :, :]
+    sym_mirror_img_b = sym_mirror_img_b[:int(img_h / 2), :, :]
+    # combine the two images
+    sym_mirror_img = np.concatenate((sym_mirror_img_a, sym_mirror_img_b), axis=0)
+    # how can we combine the images while keeping the original aspect ratio?
+    # A: we can use the original image dimensions to determine the new image dimensions
+    # we can then use the new image dimensions to create a new image array
+    # resize the image to the original dimensions
+    # sym_mirror_img = Image.fromarray(sym_mirror_img)
+    # sym_mirror_img = sym_mirror_img.resize((img_w, img_h))
+    # convert the image back to an array
+    # sym_mirror_img = np.asarray(sym_mirror_img)
+     
+    return sym_mirror_img
 
-# mirror the image
-def mirror(img, side, quadrants) -> None:
-    """Mirror the image by desired side and number of quadrants"""
-    # divide the image into quadrants
-    if quadrants == 1:
-        
+
+def kaleidoscope(img_array, n):
+    """create a kaleidoscope image for n steps"""
+    orginal_shape = img_array.shape
+    steps = 0
+    while steps < n:
+        img_array = symetric_mirror(img_array)
+        steps += 1
+    # resize the image to the original dimensions
+    # img_array = Image.fromarray(img_array)
+    # img_array = img_array.resize((orginal_shape[1], orginal_shape[0]))
+    # convert the image back to an array
+    # img_array = np.asarray(img_array)
+    return img_array
+
+
+# def main():
+#     kaleido_8 = kaleidoscope(img_array, 8)
+#     plt.imshow(kaleido_8)
+
+# if __name__ == "__main__":
+#     main()
