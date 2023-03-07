@@ -5,9 +5,9 @@ import numpy as np
 import tkinter as tk
 from image_jam import invert_img, save_img, upload_img, image_subupdate
 
-LAYOUT 
-
 # lets clean this up as a class instead of this mess
+
+
 class ImageJamGUI:
     """ImageJam GUI class
     --------------------
@@ -33,8 +33,8 @@ class ImageJamGUI:
              sg.Button('Upload Image', key='UPLOAD_IMG')],
             [sg.Image("", size=(img_w, img_h),
              # set the key in order to access the
-             # window element during the runtime loop
-             key="MAIN_IMG", pad=(20, 20))],
+                      # window element during the runtime loop
+                      key="MAIN_IMG", pad=(20, 20))],
             [sg.Text('Red'), sg.Slider([0, 255], orientation="horizontal",
                                        default_value=0, key='rSlider')],
             [sg.Text('Green'), sg.Slider([0, 255],
@@ -79,7 +79,7 @@ class ImageJamGUI:
                     cur_filepath, r_val, g_val, b_val,
                     self.alpha, self.img_w, self.img_h, self.invert_flag
                 )
-            if event == 'UPLOAD_IMG' and cur_filepath != ' ':
+            if event == 'UPLOAD_IMG' and cur_filepath not in ['', ' ']:
                 upload_img(
                     cur_filepath, r_val, g_val, b_val, self.alpha,
                     self.img_w, self.img_h, self.invert_flag, self.window)
