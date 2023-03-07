@@ -15,6 +15,7 @@ print(test_img_array.shape)
 
 # global variables
 ORIGINAL_IMG = None
+INVERTED = False
 
 # colorize the image
 def set_color(r_val, g_val, b_val, alpha, invert_flag):
@@ -25,21 +26,31 @@ def set_color(r_val, g_val, b_val, alpha, invert_flag):
     g_new = ORIGINAL_IMG[:, :, 1] * g_val
     # set blue values
     b_new = ORIGINAL_IMG[:, :, 2] * b_val
+    alpha_new = ORIGINAL_IMG[:, :, 3] * alpha
 
     # clamp the values to 0-255
     r_new = np.clip(r_new, 0, 255)
     g_new = np.clip(g_new, 0, 255)
     b_new = np.clip(b_new, 0, 255)
+    alpha_new = np.clip(alpha_new, 0, 255)
+
     # create an updated image tensor based on 100 new color arrays
     update_array = np.zeros((ORIGINAL_IMG.shape), dtype=np.uint8)
-    update_array[:, :, 0] = r_new  # set red channel
-    update_array[:, :, 1] = g_new  # set green channel
-    update_array[:, :, 2] = b_new  # set blue channel
-    update_array[:, :, 3] = alpha  # set alpha channel
+    update_array[:, :, 0] = r_new      # set red channel
+    update_array[:, :, 1] = g_new      # set green channel
+    update_array[:, :, 2] = b_new      # set blue channel
+    update_array[:, :, 3] = alpha_new  # set alpha channel
 
     # invert the image
     if invert_flag:
-        update_array = 255 - update_array
+        # use multiplication to invert the image so it works both ways
+        if INVERTED:
+            update_array = 255 - update_array
+            INVERTED = False
+        else:
+            update_array =+ 255
+            INVERTED = True
+
     # print(update_array.shape)  # check the dimension of the image
     # converting the image from array using uint8 data type for pixel values
     image_update = Image.fromarray(update_array, "RGB")
@@ -110,7 +121,7 @@ def invert_img(r_val: int, g_val: int, b_val: int, alpha,
     """Invert the image"""
     invert_flag = True
     image_subupdate(r_val, g_val, b_val,
-                    alpha, invert_flag, window)
+                    alpha, img_w, img_h, invert_flag, window)
 
 def symetric_mirror(img_array):
     """Create a symetric mirror image of an image array"""
