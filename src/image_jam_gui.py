@@ -76,8 +76,8 @@ class ImageJamGUI:
                 r_prev, g_prev, b_prev = r_val, g_val, b_val
             if event == 'INVERT':
                 invert_img(
-                    cur_filepath, r_val, g_val, b_val,
-                    self.alpha, self.img_w, self.img_h, True, self.window
+                    r_val, g_val, b_val, self.alpha, 
+                    self.img_w, self.img_h, self.window
                 )
             if event == 'UPLOAD_IMG' and cur_filepath not in ['', ' ']:
                 upload_img(
