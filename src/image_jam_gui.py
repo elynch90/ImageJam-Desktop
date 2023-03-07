@@ -67,7 +67,7 @@ class ImageJamGUI:
                 cur_filepath = values[0]
                 r_val, g_val = values['rSlider'], values['gSlider']
                 b_val = values['bSlider']
-                if r_val != r_prev or g_val != self.g_prev or b_val != b_prev:
+                if r_val != r_prev or g_val != g_prev or b_val != b_prev:
                     image_subupdate(
                         cur_filepath, r_val, g_val, b_val, self.alpha,
                         self.img_w, self.img_h, self.invert_flag, self.window
