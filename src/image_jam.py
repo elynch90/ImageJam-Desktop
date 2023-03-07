@@ -105,10 +105,10 @@ def upload_img(image_path, r_val, g_val, b_val, alpha,
         print("No image selected")
 
 
-def invert_img(cur_filepath, r_val, g_val, b_val, alpha,
-               img_w, img_h, invert_flag, window):
+def invert_img(r_val: int, g_val: int, b_val: int, alpha,
+               img_w: int, img_h: int, window):
     """Invert the image"""
-
+    invert_flag = True
     image_subupdate(r_val, g_val, b_val,
                     alpha, invert_flag, window)
 
