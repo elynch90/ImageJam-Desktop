@@ -13,6 +13,8 @@ test_img = Image.open(fp)
 test_img_array = np.asarray(test_img)
 print(test_img_array.shape)
 
+# global variables
+ORIGINAL_IMG = None
 
 # colorize the image
 def set_color(image_path, r_val, g_val, b_val, alpha, invert_flag):
@@ -20,11 +22,11 @@ def set_color(image_path, r_val, g_val, b_val, alpha, invert_flag):
     cur_image = Image.open(str(image_path))
     image_tensor = np.asarray(cur_image)
     # set red values
-    r_new = image_tensor[:, :, 0] * int(r_val / 100)  
+    r_new = image_tensor[:, :, 0] * r_val
     # set green values
-    g_new = image_tensor[:, :, 1] * int(g_val / 100)
+    g_new = image_tensor[:, :, 1] * g_val
     # set blue values
-    b_new = image_tensor[:, :, 2] * int(b_val / 100)
+    b_new = image_tensor[:, :, 2] * b_val
 
     # clamp the values to 0-255
     r_new = np.clip(r_new, 0, 255)
@@ -80,18 +82,21 @@ def save_img(cur_filepath, r_val, g_val, b_val, alpha, invert_flag, window):
 
 def upload_img(cur_filepath, r_val, g_val, b_val, alpha,
                img_w, img_h, invert_flag, window):
-    image_subupdate(cur_filepath, r_val, g_val, b_val, alpha,
-                    img_w, img_h, invert_flag, window)
-    # display current image with resize formatiting
-    # overide to default
-    window.Element("rSlider").update(value="0")
-    window.Element("gSlider").update(value="0")
-    window.Element("bSlider").update(value="0")
-    window.Element("alphaSlider").update(value="0")
-    # overwrite previous color channel vals
-    r_prev = 0
-    g_prev = 0
-    b_prev = 0
+    if cur_filepath != "":
+        image_subupdate(cur_filepath, r_val, g_val, b_val, alpha,
+                        img_w, img_h, invert_flag, window)
+        # display current image with resize formatiting
+        # overide to default
+        window.Element("rSlider").update(value="0")
+        window.Element("gSlider").update(value="0")
+        window.Element("bSlider").update(value="0")
+        window.Element("alphaSlider").update(value="0")
+        # overwrite previous color channel vals
+        r_prev = 0
+        g_prev = 0
+        b_prev = 0
+    else:
+        print("No image selected")
 
 
 def invert_img(cur_filepath, r_val, g_val, b_val, alpha,
