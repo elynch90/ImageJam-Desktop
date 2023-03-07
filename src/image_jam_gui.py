@@ -5,6 +5,7 @@ import numpy as np
 import tkinter as tk
 from image_jam import invert_img, save_img, upload_img, image_subupdate
 
+LAYOUT 
 
 # lets clean this up as a class instead of this mess
 class ImageJamGUI:
@@ -34,15 +35,15 @@ class ImageJamGUI:
              # set the key in order to access the
              # window element during the runtime loop
              key="MAIN_IMG", pad=(20, 20))],
-            [sg.Text('Red'), sg.Slider([-255, 255], orientation="horizontal",
+            [sg.Text('Red'), sg.Slider([0, 255], orientation="horizontal",
                                        default_value=0, key='rSlider')],
-            [sg.Text('Green'), sg.Slider([-255, 255],
+            [sg.Text('Green'), sg.Slider([0, 255],
                                          orientation="horizontal",
                                          default_value=0, key='gSlider')],
-            [sg.Text('Blue'), sg.Slider([-255, 255],
+            [sg.Text('Blue'), sg.Slider([0, 255],
                                         orientation="horizontal",
                                         default_value=0, key='bSlider')],
-            [sg.Text('Alpha'), sg.Slider([-255, 255],
+            [sg.Text('Alpha'), sg.Slider([0, 255],
                                          orientation="horizontal", default_value=0, key='alphaSlider')],
             [sg.Button('Invert', key='INVERT')],
             [sg.Button('Advanced', key='ADVANCED'),
