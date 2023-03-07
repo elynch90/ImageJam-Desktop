@@ -31,26 +31,27 @@ def set_color(r_val, g_val, b_val, alpha, invert_flag):
     alpha_new = ORIGINAL_IMG[:, :, 3] * alpha
 
     # clamp the values to 0-255
-    r_new = np.clip(r_new, 0, 255)
-    g_new = np.clip(g_new, 0, 255)
-    b_new = np.clip(b_new, 0, 255)
-    alpha_new = np.clip(alpha_new, 0, 255)
+    r_clamped = np.clip(r_new, 0, 255)
+    g_clamped = np.clip(g_new, 0, 255)
+    b_clamped = np.clip(b_new, 0, 255)
+    alpha_clamped = np.clip(alpha_new, 0, 255)
 
     # create an updated image tensor based on 100 new color arrays
     update_array = np.zeros((ORIGINAL_IMG.shape), dtype=np.uint8)
-    update_array[:, :, 0] = r_new      # set red channel
-    update_array[:, :, 1] = g_new      # set green channel
-    update_array[:, :, 2] = b_new      # set blue channel
-    update_array[:, :, 3] = alpha_new  # set alpha channel
+    update_array[:, :, 0] = r_clamped      # set red channel
+    update_array[:, :, 1] = g_clamped      # set green channel
+    update_array[:, :, 2] = b_clamped      # set blue channel
+    update_array[:, :, 3] = alpha_clamped  # set alpha channel
 
     # invert the image
     if invert_flag:
+        global INVERTED  # pylint: disable=global-statement
         # use multiplication to invert the image so it works both ways
         if INVERTED:
             update_array = 255 - update_array
             INVERTED = False
         else:
-            update_array = + 255
+            update_array = update_array + 255
             INVERTED = True
 
     # print(update_array.shape)  # check the dimension of the image
@@ -71,10 +72,10 @@ def set_alpha(image_tensor, alpha):
 def image_subupdate(
         r_val=None, g_val=None, b_val=None,
         alpha=None, img_w=500, img_h=500,
-        invert_flag=False, window=None, set_color=True):
+        invert_flag=False, window=None, recolor=True):
     """Update the image"""
     # pass the current slider values to the colorizer
-    if set_color:
+    if recolor:
         image_update = set_color(r_val, g_val,
                                  b_val, alpha, invert_flag)
     else:
@@ -108,7 +109,7 @@ def upload_img(image_path, r_val, g_val, b_val, alpha,
         global ORIGINAL_IMG  # pylint: disable=global-statement
         ORIGINAL_IMG = image_tensor
         # update the image
-        image_subupdate(set_color=False
+        image_subupdate(img_w=img_w, img_h=img_h, recolor=False, window=window)
         # display current image with resize formatiting
         # overide to default
         window.Element("rSlider").update(value="0")
