@@ -87,7 +87,7 @@ class ImageJamGUI:
             # slider colorizer listener awaiting changes to slider values
             # save image event
             if event == "SAVE":
-                save_img(cur_filepath, r_val, g_val, b_val,
+                save_img(r_val, g_val, b_val,
                          self.alpha, self.invert_flag, self.window)
             # if user closes window or clicks cancel
             if event == sg.WIN_CLOSED or event == 'Cancel':
