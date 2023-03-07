@@ -18,6 +18,8 @@ ORIGINAL_IMG = None
 INVERTED = False
 
 # colorize the image
+
+
 def set_color(r_val, g_val, b_val, alpha, invert_flag):
     """Set the color of the image"""
     # set red values
@@ -48,7 +50,7 @@ def set_color(r_val, g_val, b_val, alpha, invert_flag):
             update_array = 255 - update_array
             INVERTED = False
         else:
-            update_array =+ 255
+            update_array = + 255
             INVERTED = True
 
     # print(update_array.shape)  # check the dimension of the image
@@ -66,12 +68,18 @@ def set_alpha(image_tensor, alpha):
     return image_tensor
 
 
-def image_subupdate(r_val, g_val, b_val,
-                    alpha, img_w, img_h, invert_flag, window):
+def image_subupdate(
+        r_val=None, g_val=None, b_val=None,
+        alpha=None, img_w=500, img_h=500,
+        invert_flag=False, window=None, set_color=True):
     """Update the image"""
     # pass the current slider values to the colorizer
-    image_update = set_color(r_val, g_val,
-                             b_val, alpha, invert_flag)
+    if set_color:
+        image_update = set_color(r_val, g_val,
+                                 b_val, alpha, invert_flag)
+    else:
+        # load the image from the global variable
+        image_update = Image.fromarray(ORIGINAL_IMG, "RGB")
     image_update.resize(size=(img_w, img_h))
     image_update.save('cur_img', format="png")
     # update the gui image
@@ -99,8 +107,8 @@ def upload_img(image_path, r_val, g_val, b_val, alpha,
         # set the global variable
         global ORIGINAL_IMG  # pylint: disable=global-statement
         ORIGINAL_IMG = image_tensor
-        image_subupdate(r_val, g_val, b_val, alpha,
-                        img_w, img_h, invert_flag, window)
+        # update the image
+        image_subupdate(set_color=False
         # display current image with resize formatiting
         # overide to default
         window.Element("rSlider").update(value="0")
@@ -111,7 +119,6 @@ def upload_img(image_path, r_val, g_val, b_val, alpha,
         r_prev = 0
         g_prev = 0
         b_prev = 0
-        ORIGINAL_IMG 
     else:
         print("No image selected")
 
@@ -122,6 +129,7 @@ def invert_img(r_val: int, g_val: int, b_val: int, alpha,
     invert_flag = True
     image_subupdate(r_val, g_val, b_val,
                     alpha, img_w, img_h, invert_flag, window)
+
 
 def symetric_mirror(img_array):
     """Create a symetric mirror image of an image array"""
@@ -141,7 +149,8 @@ def symetric_mirror(img_array):
     sym_mirror_img_a = sym_mirror_img_a[:int(img_w / 2), :, :]
     sym_mirror_img_b = sym_mirror_img_b[:int(img_h / 2), :, :]
     # combine the two images
-    sym_mirror_img = np.concatenate((sym_mirror_img_a, sym_mirror_img_b), axis=0)
+    sym_mirror_img = np.concatenate(
+        (sym_mirror_img_a, sym_mirror_img_b), axis=0)
     # how can we combine the images while keeping the original aspect ratio?
     # A: we can use the original image dimensions to determine the new image dimensions
     # we can then use the new image dimensions to create a new image array
@@ -150,7 +159,7 @@ def symetric_mirror(img_array):
     # sym_mirror_img = sym_mirror_img.resize((img_w, img_h))
     # convert the image back to an array
     # sym_mirror_img = np.asarray(sym_mirror_img)
-     
+
     return sym_mirror_img
 
 
