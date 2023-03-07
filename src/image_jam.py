@@ -47,7 +47,7 @@ def set_color(r_val, g_val, b_val, alpha, invert_flag):
     update_array[:, :, 2] = b_clamped      # set blue channel
     update_array[:, :, 3] = alpha_clamped  # set alpha channel
 
-    # invert the image
+      # invert the image
     if invert_flag:
         global INVERTED  # pylint: disable=global-statement
         # use multiplication to invert the image so it works both ways
@@ -57,7 +57,6 @@ def set_color(r_val, g_val, b_val, alpha, invert_flag):
         else:
             update_array = update_array + 255
             INVERTED = True
-
     # print(update_array.shape)  # check the dimension of the image
     # converting the image from array using uint8 data type for pixel values
     image_update = Image.fromarray(update_array, "RGB")
